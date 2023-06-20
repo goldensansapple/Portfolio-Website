@@ -13,9 +13,9 @@ export default function MinesweeperGrid({
     <table className="table-fixed whitespace-nowrap w-max">
       <tbody>
         {grid.map((row, y) => (
-          <tr key={y} className="">
+          <tr key={y}>
             {row.map((cell, x) => (
-              <td className="" key={x}>
+              <td key={x}>
                 <MinesweeperCell
                   cell={cell}
                   onClick={() => handleClick(x, y)}
