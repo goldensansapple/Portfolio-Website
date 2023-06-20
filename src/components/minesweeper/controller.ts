@@ -58,23 +58,26 @@ export function newMinesweeperGrid(
  * @param initalY The y coordinate of the cell.
  */
 export function revealEmpties(
-  state: MinesweeperState,
+  grid: MinesweeperCellType[][],
+  trueGrid: MinesweeperCellType[][],
+  width: number,
+  height: number,
   initalX: number,
   initalY: number
 ) {
   const queue = [{ x: initalX, y: initalY }];
+  let hiddenRemoved = 0;
   while (queue.length > 0) {
     const { x, y } = queue.pop()!!;
-    state.grid[y][x] = state.trueGrid[y][x];
-    state.hidden--;
-    if (state.trueGrid[y][x] === 0) {
+    grid[y][x] = trueGrid[y][x];
+    hiddenRemoved++;
+    if (trueGrid[y][x] === 0) {
       for (const [dx, dy] of surrounding8) {
         const nx = x + dx;
         const ny = y + dy;
-        if (nx < 0 || nx >= state.width || ny < 0 || ny >= state.height)
-          continue;
+        if (nx < 0 || nx >= width || ny < 0 || ny >= height) continue;
         if (
-          state.grid[ny][nx] === "hidden" &&
+          grid[ny][nx] === "hidden" &&
           queue.find((c) => c.x === nx && c.y === ny) === undefined
         ) {
           queue.push({ x: nx, y: ny });
@@ -82,14 +85,9 @@ export function revealEmpties(
       }
     }
   }
-}
-
-export function checkVictory(state: MinesweeperState) {
-  if (state.minesFlagged === state.mines && state.hidden === state.mines) {
-    state.gameState = "win";
-  }
+  return { grid, hiddenRemoved };
 }
 
 export function isValidDimension(value: number): boolean {
-  return (value >= 1 && value <= 50);
+  return value >= 1 && value <= 50;
 }

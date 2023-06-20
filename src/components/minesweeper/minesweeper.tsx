@@ -2,7 +2,6 @@
 
 import { Reducer, useReducer } from "react";
 import {
-  checkVictory,
   isValidDimension,
   newMinesweeperGrid,
   revealEmpties,
@@ -19,7 +18,9 @@ import MinesweeperHeader from "./minesweeperHeader";
 const initalState: MinesweeperState = {
   width: 10,
   height: 10,
-  grid: Array<Array<MinesweeperCellType>>(10).fill(Array(10).fill("hidden")),
+  grid: Array<Array<MinesweeperCellType>>(10)
+    .fill([0])
+    .map((x) => Array<MinesweeperCellType>(10).fill("hidden")),
   trueGrid: newMinesweeperGrid(10, 10, 10),
   mines: 10,
   flags: 0,
@@ -44,14 +45,24 @@ const reducer: Reducer<MinesweeperState, MinesweeperAction> = (
     case "CLICK": {
       if (state.gameState !== "playing") break;
       const { x, y } = action.coord;
-      nextState.grid = [...state.grid.map((row) => [...row])];
       if (state.mode === "reveal") {
         if (state.grid[y][x] === "hidden") {
           if (state.trueGrid[y][x] === "mine") {
             nextState.gameState = "lose";
           }
-          revealEmpties(nextState, x, y);
-          checkVictory(nextState);
+          const { grid, hiddenRemoved } = revealEmpties(
+            [...state.grid.map((row) => [...row])],
+            state.trueGrid,
+            state.width,
+            state.height,
+            x,
+            y
+          );
+          nextState.grid = grid;
+          nextState.hidden -= hiddenRemoved;
+          if (nextState.minesFlagged == nextState.hidden) {
+            nextState.gameState = "win";
+          }
         }
       } else {
         switch (state.grid[y][x]) {
