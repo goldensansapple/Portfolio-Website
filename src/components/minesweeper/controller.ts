@@ -65,11 +65,12 @@ export function revealEmpties(
   initalX: number,
   initalY: number
 ) {
+  const newGrid = [...grid.map((row) => [...row])];
   const queue = [{ x: initalX, y: initalY }];
   let hiddenRemoved = 0;
   while (queue.length > 0) {
     const { x, y } = queue.pop()!!;
-    grid[y][x] = trueGrid[y][x];
+    newGrid[y][x] = trueGrid[y][x];
     hiddenRemoved++;
     if (trueGrid[y][x] === 0) {
       for (const [dx, dy] of surrounding8) {
@@ -77,7 +78,7 @@ export function revealEmpties(
         const ny = y + dy;
         if (nx < 0 || nx >= width || ny < 0 || ny >= height) continue;
         if (
-          grid[ny][nx] === "hidden" &&
+          newGrid[ny][nx] === "hidden" &&
           queue.find((c) => c.x === nx && c.y === ny) === undefined
         ) {
           queue.push({ x: nx, y: ny });
@@ -85,9 +86,28 @@ export function revealEmpties(
       }
     }
   }
-  return { grid, hiddenRemoved };
+  return { newGrid, hiddenRemoved };
 }
 
-export function isValidDimension(value: number): boolean {
-  return value >= 1 && value <= 50;
+export function revealAllMines(
+  grid: MinesweeperCellType[][],
+  trueGrid: MinesweeperCellType[][]
+) {
+  const newGrid = [...grid.map((row) => [...row])];
+  for (let y = 0; y < trueGrid.length; y++) {
+    for (let x = 0; x < trueGrid[y].length; x++) {
+      if (trueGrid[y][x] === "mine") {
+        newGrid[y][x] = "mine";
+      }
+    }
+  }
+  return newGrid;
+}
+
+export function isValidDimension(
+  width: number,
+  height: number,
+  mines: number
+): boolean {
+  return width >= 1 && height >= 1 && mines >= 1;
 }

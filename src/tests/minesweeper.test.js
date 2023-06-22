@@ -1,5 +1,6 @@
 const {
   newMinesweeperGrid,
+  isValidDimension,
   revealEmpties,
 } = require("../components/minesweeper/controller.ts");
 
@@ -52,7 +53,7 @@ test("Reveal a lake of zeros in the grid", () => {
     [0, 1, "hidden", "hidden"],
   ];
 
-  const { grid, hiddenRemoved } = revealEmpties(
+  const { newGrid, hiddenRemoved } = revealEmpties(
     startGrid,
     trueGrid,
     4,
@@ -61,6 +62,19 @@ test("Reveal a lake of zeros in the grid", () => {
     0
   );
 
-  expect(grid).toEqual(expectedGrid);
+  expect(newGrid).toEqual(expectedGrid);
   expect(hiddenRemoved).toBe(14);
+});
+
+test("Valid dimension function test", () => {
+  expect(isValidDimension(10, 10, 10)).toBe(true);
+  expect(isValidDimension(-10, 10, 10)).toBe(false);
+  expect(isValidDimension(10, -10, 10)).toBe(false);
+  expect(isValidDimension(10, 10, -10)).toBe(false);
+  expect(isValidDimension(0, 10, 10)).toBe(false);
+  expect(isValidDimension(10, 0, 10)).toBe(false);
+  expect(isValidDimension(10, 10, 0)).toBe(false);
+  expect(isValidDimension(NaN, 10, 10)).toBe(false);
+  expect(isValidDimension(10, NaN, 10)).toBe(false);
+  expect(isValidDimension(10, 10, NaN)).toBe(false);
 });

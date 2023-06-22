@@ -13,10 +13,10 @@ export interface MinesweeperState {
   widthInput: number;
   heightInput: number;
   minesInput: number;
-  errorMessage: string | null;
+  errorMessage: string;
 }
 
-export type MinesweeperCellType = "hidden" | "flag" | "mine" | number;
+export type MinesweeperCellType = "hidden" | "flag" | "mine" | "exploded" | number;
 
 export type MinesweeperGameState = "playing" | "win" | "lose" | "setup";
 

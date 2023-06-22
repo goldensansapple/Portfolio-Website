@@ -4,6 +4,7 @@ import { Reducer, useReducer } from "react";
 import {
   isValidDimension,
   newMinesweeperGrid,
+  revealAllMines,
   revealEmpties,
 } from "./controller";
 import {
@@ -20,7 +21,7 @@ const initalState: MinesweeperState = {
   height: 10,
   grid: Array<Array<MinesweeperCellType>>(10)
     .fill([0])
-    .map((x) => Array<MinesweeperCellType>(10).fill("hidden")),
+    .map(() => Array<MinesweeperCellType>(10).fill("hidden")),
   trueGrid: newMinesweeperGrid(10, 10, 10),
   mines: 10,
   flags: 0,
@@ -48,20 +49,23 @@ const reducer: Reducer<MinesweeperState, MinesweeperAction> = (
       if (state.mode === "reveal") {
         if (state.grid[y][x] === "hidden") {
           if (state.trueGrid[y][x] === "mine") {
+            nextState.grid = revealAllMines(state.grid, state.trueGrid);
+            nextState.grid[y][x] = "exploded";
             nextState.gameState = "lose";
-          }
-          const { grid, hiddenRemoved } = revealEmpties(
-            [...state.grid.map((row) => [...row])],
-            state.trueGrid,
-            state.width,
-            state.height,
-            x,
-            y
-          );
-          nextState.grid = grid;
-          nextState.hidden -= hiddenRemoved;
-          if (nextState.minesFlagged == nextState.hidden) {
-            nextState.gameState = "win";
+          } else {
+            const { newGrid, hiddenRemoved } = revealEmpties(
+              state.grid,
+              state.trueGrid,
+              state.width,
+              state.height,
+              x,
+              y
+            );
+            nextState.grid = newGrid;
+            nextState.hidden -= hiddenRemoved;
+            if (nextState.minesFlagged == nextState.hidden) {
+              nextState.gameState = "win";
+            }
           }
         }
       } else {
@@ -95,32 +99,44 @@ const reducer: Reducer<MinesweeperState, MinesweeperAction> = (
     }
 
     case "CHANGE_WIDTH": {
-      if (isNaN(action.width)) break;
       nextState.widthInput = action.width;
 
       break;
     }
 
     case "CHANGE_HEIGHT": {
-      if (isNaN(action.height)) break;
       nextState.heightInput = action.height;
 
       break;
     }
 
     case "CHANGE_MINES": {
-      if (isNaN(action.mines)) break;
       nextState.minesInput = action.mines;
 
       break;
     }
 
     case "RESET": {
+      if (
+        isNaN(state.widthInput) ||
+        isNaN(state.heightInput) ||
+        isNaN(state.minesInput) ||
+        !isValidDimension(state.widthInput, state.heightInput, state.minesInput)
+      ) {
+        nextState.errorMessage =
+          "Invalid input: width, height and mine count must be greater than 0.";
+        break;
+      }
+      if (state.minesInput >= state.widthInput * state.heightInput) {
+        nextState.errorMessage =
+          "Invalid input: mine count must be less than width * height.";
+        break;
+      }
       nextState.width = state.widthInput;
       nextState.height = state.heightInput;
-      nextState.grid = Array<Array<MinesweeperCellType>>(
-        state.heightInput
-      ).fill(Array(state.widthInput).fill("hidden"));
+      nextState.grid = Array<Array<MinesweeperCellType>>(state.heightInput)
+        .fill([0])
+        .map(() => Array<MinesweeperCellType>(state.widthInput).fill("hidden"));
       nextState.mines = state.minesInput;
       nextState.trueGrid = newMinesweeperGrid(
         state.widthInput,
@@ -135,6 +151,8 @@ const reducer: Reducer<MinesweeperState, MinesweeperAction> = (
       nextState.widthInput = state.widthInput;
       nextState.heightInput = state.heightInput;
       nextState.minesInput = state.minesInput;
+
+      nextState.errorMessage = "";
 
       break;
     }
@@ -154,6 +172,7 @@ export default function Minesweeper() {
     widthInput,
     heightInput,
     minesInput,
+    errorMessage,
   } = state;
 
   const handleClick = (x: number, y: number) => {
@@ -197,6 +216,7 @@ export default function Minesweeper() {
           heightInput={heightInput}
           minesInput={minesInput}
           mode={mode}
+          errorMessage={errorMessage}
           toggleMode={toggleMode}
           handleReset={handleReset}
           handleInputChange={handleInputChange}
