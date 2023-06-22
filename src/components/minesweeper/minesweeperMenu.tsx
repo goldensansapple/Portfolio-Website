@@ -5,6 +5,7 @@ export default function MinesweeperMenu({
   heightInput,
   minesInput,
   mode,
+  errorMessage,
   toggleMode,
   handleReset,
   handleInputChange,
@@ -13,6 +14,7 @@ export default function MinesweeperMenu({
   heightInput: number;
   minesInput: number;
   mode: MinesweeperMode;
+  errorMessage: string;
   toggleMode: () => void;
   handleReset: () => void;
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -58,6 +60,7 @@ export default function MinesweeperMenu({
           onChange={handleInputChange}
         />
       </label>
+      <div className="text-red-500">{errorMessage}</div>
       <button
         className="border border-black dark:border-white rounded m-1 p-1 hover:border-orange-500"
         onClick={handleReset}
