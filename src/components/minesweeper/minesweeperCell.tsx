@@ -52,6 +52,19 @@ export default function MinesweeperCell({
 
       break;
     }
+    case "exploded": {
+      image = (
+        <Image
+          src="/explode.svg"
+          alt="exploded"
+          width={cellWidth}
+          height={cellHeight}
+          priority
+        />
+      );
+
+      break;
+    }
     default: {
       image = (
         <Image
