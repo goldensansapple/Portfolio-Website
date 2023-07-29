@@ -1,4 +1,3 @@
-
 import MinesweeperCell from "./minesweeperCell";
 import { MinesweeperCellType } from "./types";
 
@@ -9,6 +8,7 @@ export default function MinesweeperGrid({
   grid: MinesweeperCellType[][];
   handleClick: (x: number, y: number) => void;
 }) {
+
   return (
     <table className="table-fixed whitespace-nowrap w-max">
       <tbody>

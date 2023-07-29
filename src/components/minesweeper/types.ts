@@ -1,8 +1,8 @@
 export interface MinesweeperState {
   width: number;
   height: number;
-  grid: Array<Array<MinesweeperCellType>>;
-  trueGrid: Array<Array<MinesweeperCellType>>;
+  grid: MinesweeperCellType[][];
+  trueGrid: MinesweeperCellType[][];
   mines: number;
   flags: number;
   minesFlagged: number;

@@ -1,16 +1,28 @@
+import NavHeader from "@/components/header/navHeader";
 import Minesweeper from "@/components/minesweeper/minesweeper";
-import Link from "next/link";
 
 export default function MinesweeperPage() {
   return (
     <>
-      <div className="flex border-b border-gray-300 mb-2">
-        <Link className="p-4" href="/">Home</Link>
+      <NavHeader />
+      <div className="pt-20">
+        <div className="text-4xl text-center mb-2 font-extrabold">
+          React Minesweeper
+        </div>
+        <noscript>
+          <style>{`
+            .requires-js {
+              display: none;
+            }
+          `}</style>
+          <div className="text-center font-bold">
+            This game requires JavaScript to be enabled in your browser.
+          </div>
+        </noscript>
+        <main className="flex justify-center requires-js">
+          <Minesweeper />
+        </main>
       </div>
-      <div className="text-4xl text-center mb-2">React Minesweeper</div>
-      <main className="flex justify-center">
-        <Minesweeper />
-      </main>
     </>
   );
 }

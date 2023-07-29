@@ -80,7 +80,7 @@ export default function MinesweeperCell({
 
   return (
     <button
-      className={`p-0 w-[${cellWidth}px] h-[${cellHeight}px] min-w-[16px] min-h-[16px] border border-gray-500 dark:border-gray-400 hover:border-orange-500`}
+      className={`p-0 w-[${cellWidth}px] h-[${cellHeight}px] min-w-[16px] min-h-[16px] border border-gray-500 hover:border-orange-500 hover:scale-105`}
       onClick={onClick}
     >
       {image}

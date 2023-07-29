@@ -1,3 +1,4 @@
+import  Button  from "../button/button";
 import { MinesweeperMode } from "./types";
 
 export default function MinesweeperMenu({
@@ -23,17 +24,12 @@ export default function MinesweeperMenu({
     <div className="flex flex-col">
       <label className="p-1">
         Mode: {mode === "flag" ? "Flagging" : "Revealing"}
-        <button
-          className="border border-black dark:border-white rounded m-1 p-1 hover:border-orange-500"
-          onClick={toggleMode}
-        >
-          Toggle Flagging
-        </button>
+        <Button text="Toggle Flagging" onClick={toggleMode} />
       </label>
       <label className="p-1">
         Width:{" "}
         <input
-          className="border rounded p-1 dark:bg-black"
+          className="border rounded p-1"
           type="number"
           name="width"
           value={widthInput}
@@ -43,7 +39,7 @@ export default function MinesweeperMenu({
       <label className="p-1">
         Height:{" "}
         <input
-          className="border rounded p-1 dark:bg-black"
+          className="border rounded p-1"
           type="number"
           name="height"
           value={heightInput}
@@ -53,7 +49,7 @@ export default function MinesweeperMenu({
       <label className="p-1">
         Mines:{" "}
         <input
-          className="border rounded p-1 dark:bg-black"
+          className="border rounded p-1"
           type="number"
           name="mines"
           value={minesInput}
@@ -61,12 +57,7 @@ export default function MinesweeperMenu({
         />
       </label>
       <div className="text-red-500">{errorMessage}</div>
-      <button
-        className="border border-black dark:border-white rounded m-1 p-1 hover:border-orange-500"
-        onClick={handleReset}
-      >
-        Reset Game
-      </button>
+      <Button onClick={handleReset} text="Reset" />
     </div>
   );
 }
